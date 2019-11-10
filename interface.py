@@ -8,7 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import pnn
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -29,10 +29,18 @@ class Ui_Dialog(object):
         self.pushButton_2.setObjectName("pushButton_2")
 
         self.retranslateUi(Dialog)
-        self.pushButton.clicked.connect(self.pushButton.click)
-        self.pushButton_2.clicked.connect(self.pushButton_2.click)
+        self.pushButton.clicked.connect(self.startAnalysis)
+        self.pushButton_2.clicked.connect(self.terminateProgram)
         self.lineEdit.returnPressed.connect(self.lineEdit.selectAll)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def startAnalysis(self):
+        result = pnn.analysis(self.lineEdit.text())
+        print(result)
+        return
+
+    def terminateProgram(self):
+        return
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
