@@ -7,8 +7,8 @@
 # WARNING! All changes made in this file will be lost!
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-import pnn
+from PyQt5 import QtCore, QtWidgets
+from pnn import analysis
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -30,17 +30,14 @@ class Ui_Dialog(object):
 
         self.retranslateUi(Dialog)
         self.pushButton.clicked.connect(self.startAnalysis)
-        self.pushButton_2.clicked.connect(self.terminateProgram)
-        self.lineEdit.returnPressed.connect(self.lineEdit.selectAll)
+        self.pushButton_2.clicked.connect(QtWidgets.qApp.quit)
+        self.lineEdit.returnPressed.connect(self.startAnalysis)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def startAnalysis(self):
-        result = pnn.analysis(self.lineEdit.text())
+        result = analysis(self.lineEdit.text())
         result = str(result)
         self.textEdit.append(result)
-        return
-
-    def terminateProgram(self):
         return
 
     def retranslateUi(self, Dialog):
