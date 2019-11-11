@@ -12,15 +12,20 @@ def decipher(lang):
     wordlist = defaultdict()
     with open(path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
+        key = 1                     # key starts from '1' as '0' should be reserved for user input
         for line in lines:
             individual_word = line.split('\\')
             try:
-                key = individual_word[0]
-                val = individual_word[5]
+                syllCount = individual_word[6].count('[')
+                if syllCount < 4:
+                    key += 1
+                    val = individual_word[5]
+                    val = re.sub('-|\'|\"', '', val)
             except IndexError:
                 continue
-            val = re.sub('-|\'|\"', '', val)
             wordlist[key] = val
+            if key > 200: # just for now
+                return wordlist # just for now
     return wordlist
 
 

@@ -36,7 +36,8 @@ class Ui_Dialog(object):
 
     def startAnalysis(self):
         result = pnn.analysis(self.lineEdit.text())
-        print(result)
+        result = str(result)
+        self.textEdit.append(result)
         return
 
     def terminateProgram(self):
