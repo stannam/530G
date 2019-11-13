@@ -1,6 +1,6 @@
 from itertools import combinations
-import editdistance
-import igraph
+from editdistance import eval
+from igraph import Graph
 import importWords
 
 
@@ -9,7 +9,7 @@ def genPNN(words, input_word):
     vertices = list(words.keys())
     edges = genPNPair(words)
 
-    g = igraph.Graph(vertex_attrs={'label': vertices},
+    g = Graph(vertex_attrs={'label': vertices},
                      edges=edges,
                      directed=False)
 
@@ -25,7 +25,7 @@ def genPNPair(words):
         w2 = words[p[1]]
 
         if (len(w1) > (len(w2) - 2)) & (len(w1) < (len(w2) + 2)):
-            ed = editdistance.eval(w1, w2)
+            ed = eval(w1, w2)
 
             if ed == 1:
                 neighbourPairs.append((p[0], p[1]))
@@ -34,8 +34,31 @@ def genPNPair(words):
 # TODO: save the pair comparison result and load it when user inputs
 
 
+def decisionMaking(tupleInput):
+    """
+
+    :param tuple: the tuple of (neighbourhood density, closed centrality)
+    :return: a float
+
+    This function takes the two network measurements and make decision on the likelihood of the user input being a word
+    in a language.
+
+    The two numbers are known to have positive correlation to the degree of wordlikeness: The higher, the better it
+    sounds like a word in the language.
+
+    As there is basically no formula for calculating wordlikeness in the market, so we will just multiply
+    the two numbers.
+    """
+
+    result = 1
+
+    for i in tupleInput:
+        result = result * i
+
+    return result
+
 def analysis(input_word):
-    languages = ['english', 'dutch', 'german']
+    languages = ['dutch', 'english', 'german']
     nd = []
     cc = []
 
@@ -45,11 +68,20 @@ def analysis(input_word):
         nd.append(len(graph.neighbors(0)))
         cc.append(graph.closeness(0))
 
-    result = zip(nd, cc)
-    print(result)
-    for i in result:
-        print(i)
+    zipAllLang = list(zip(nd, cc))
 
-    #TODO make a function that does something like result -> make this input to human readable text -> output
-    #TODO "Your input {} seems to belong to {}, because it has {} of similar words in {} and closed centrality value is {}"
+
+    resultByLang = {'dutch': None,
+                    'english': None,
+                    'german': None}
+
+    for i in range(len(zipAllLang)):
+        resultByLang[languages[i]] = decisionMaking(zipAllLang[i])
+
+    likelyLang = max(resultByLang, key=resultByLang.get)
+    output = 'Your input "{}" seems to belong to {}, because your input has the highest ND and CC values in that language'.format(input_word,
+                                                                                                                                  likelyLang)
+
+    # TODO make a function that does something like result -> make this input to human readable text -> output
+    # TODO "Your input {} seems to belong to {}, because it has {} of similar words in {} and closed centrality value is {}"
     return output
