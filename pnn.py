@@ -58,7 +58,7 @@ def decisionMaking(tupleInput):
     return result
 
 def analysis(input_word):
-    languages = ['dutch', 'english', 'german']
+    languages = ['Dutch', 'English', 'German']
     nd = []
     cc = []
 
@@ -71,9 +71,9 @@ def analysis(input_word):
     zipAllLang = list(zip(nd, cc))
 
 
-    resultByLang = {'dutch': None,
-                    'english': None,
-                    'german': None}
+    resultByLang = {'Dutch': None,
+                    'English': None,
+                    'German': None}
 
     for i in range(len(zipAllLang)):
         resultByLang[languages[i]] = decisionMaking(zipAllLang[i])

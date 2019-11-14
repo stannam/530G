@@ -35,8 +35,10 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def startAnalysis(self):
-        result = analysis(self.lineEdit.text())
+        userInput = self.lineEdit.text()
+        result = analysis(userInput)
         result = str(result)
+        self.textEdit.clear()
         self.textEdit.append(result)
         return
 

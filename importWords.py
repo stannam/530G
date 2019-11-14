@@ -5,7 +5,8 @@ import regex as re
 def decipher(lang):
     """
     :param lang: A language name in str(). At this stage we are looking into Dutch, English and German.
-    :return: defaultdict().
+
+    :return: defaultdict(). Keys are id number and values are phonological form
     """
     path = decide_filepath(lang)
 
@@ -17,15 +18,17 @@ def decipher(lang):
             individual_word = line.split('\\')
             try:
                 syllCount = individual_word[6].count('[')
-                if syllCount < 4:
-                    key += 1
+                if syllCount < 4:    # only considering words that have less than 4 syllables. (natural languages tend to limit the number of syllables among monomorphemic words)
                     val = individual_word[5]
-                    val = re.sub('-|\'|\"', '', val)
+                    val = re.sub('-|\'|\"|\[|\]|:', '', val) # vowel length can be misleading so not considered in this project.
+                    if len(val) > 0:
+                        wordlist[key] = val
+                        key += 1
             except IndexError:
                 continue
-            wordlist[key] = val
-            if key > 200: # just for now
-                return wordlist # just for now
+
+            #if key > 200: # just for now
+            #    return wordlist # just for now
     return wordlist
 
 
