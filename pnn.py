@@ -2,6 +2,8 @@ from itertools import combinations
 from editdistance import eval
 from igraph import Graph
 import importWords
+import os.path
+import pickle
 
 
 def genPNN(words, input_word):
@@ -58,6 +60,38 @@ def decisionMaking(tupleInput):
     return result
 
 def analysis(input_word):
+    if not os.path.exists('./data/preprocessed.pickle'):
+        output = analysisFromScratch(input_word)
+
+    else:
+        languages = pickle.load(open('./data/preprocessed.pickle', 'rb'))
+
+        for lang in languages:
+            currentLanguage = languages[lang]
+            newWordList = currentLanguage.wordlist
+            newPNlist = currentLanguage.PNlist
+
+            newWordList[0] = input_word
+
+            w1 = input_word
+
+            for i in range(len(newWordList)-1):
+                ind = i + 1
+                w2 = newWordList[ind]
+                if (len(w1) > (len(w2) - 2)) & (len(w1) < (len(w2) + 2)):
+                    ed = eval(w1, w2)
+
+                    if ed == 1:
+                        newPNlist.append((0, ind))
+
+            currentLanguage.update(newWordList, newPNlist)
+
+        print('add the network analysis part here')
+
+    return output
+
+
+def analysisFromScratch(input_word):
     languages = ['Dutch', 'English', 'German']
     nd = []
     cc = []

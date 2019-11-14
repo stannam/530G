@@ -1,7 +1,7 @@
 from importWords import decipher
-import multiprocessing as mp
 from itertools import combinations
 from editdistance import eval
+from os import path
 import pickle
 
 
@@ -15,7 +15,7 @@ the neighbours have the edit distance of one.
 """
 
 
-class Language:
+class Language(object):
     def __init__(self, name):
         self.name = name
 
@@ -64,20 +64,19 @@ def genPNPair(words, lang):
                 print(lang,(p[0], p[1]))
                 neighbourPairs.append((p[0], p[1]))
 
-
     return neighbourPairs
 
 
+def main():
+    if not path.exists('./data/preprocessed.pickle'):
+        for lang in languages:
+            words = decipher(lang)
+            pnlist = genPNPair(words, lang)
+            languages[lang].update(words, pnlist)
+            pickle.dump(languages, open('./data/preprocessed.pickle', 'wb'))
+
+
 if __name__ == '__main__':
-    mp.freeze_support()
     languages = {name: Language(name=name) for name in ['Dutch', 'English', 'German']}
-
-    for lang in languages:
-        words = decipher(lang)
-        pnlist = genPNPair(words, lang)
-        languages[lang].update(words, pnlist)
-        pickle.dump(languages, open('./data/preprocessed.pickle', 'wb'))
-
-    languages = pickle.load(open('./data/preprocessed.pickle', 'rb'))
-    print("well done")
+    main()
 

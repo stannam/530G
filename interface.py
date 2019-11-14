@@ -9,6 +9,8 @@
 
 from PyQt5 import QtCore, QtWidgets
 from pnn import analysis
+import preprocessing
+from preprocessing import Language
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -44,7 +46,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Language Guessing"))
         self.pushButton.setText(_translate("Dialog", "Search"))
         self.pushButton_2.setText(_translate("Dialog", "Cancel"))
 
