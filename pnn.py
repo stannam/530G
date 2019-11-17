@@ -127,32 +127,7 @@ def fromScratch(numWords = 200):
     languages = {name: Language(name=name) for name in languageNames}
     for lang in languages:
         words = importWords.decipher(lang, numWords=numWords)
-        pnlist = genPNPair(words, lang)
+        pnlist = genPNPair(words)
         languages[lang].update(words, pnlist)
 
-
-
-    nd = []
-    cc = []
-
-    for lang in languages:
-        words = importWords.decipher(lang)
-        graph = genPNN(words, input_word)
-        nd.append(len(graph.neighbors(0)))
-        cc.append(graph.closeness(0))
-
-    zipAllLang = list(zip(nd, cc))
-
-
-    resultByLang = {'Dutch': None,
-                    'English': None,
-                    'German': None}
-
-    for i in range(len(zipAllLang)):
-        resultByLang[languages[i]] = decisionMaking(zipAllLang[i])
-
-    likelyLang = max(resultByLang, key=resultByLang.get)
-    output = 'Your input "{}" seems to belong to {}, because your input has the highest ND and CC values in that language'.format(input_word,
-                                                                                                                                  likelyLang)
-
-    return output
+    return languages
