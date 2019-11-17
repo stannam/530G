@@ -2,7 +2,7 @@ from collections import defaultdict
 import regex as re
 
 
-def decipher(lang):
+def decipher(lang, numWords=None):
     """
     :param lang: A language name in str(). At this stage we are looking into Dutch, English and German.
 
@@ -27,8 +27,9 @@ def decipher(lang):
             except IndexError:
                 continue
 
-            #if key > 200: # just for now
-            #    return wordlist # just for now
+            if numWords is not None:
+                if key > numWords:
+                    return wordlist
     return wordlist
 
 

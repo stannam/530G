@@ -4,6 +4,8 @@ from igraph import Graph
 import importWords
 import os.path
 import pickle
+from preprocessing import Language
+from collections import defaultdict
 
 
 def genPNN(words, input_word):
@@ -33,7 +35,6 @@ def genPNPair(words):
                 neighbourPairs.append((p[0], p[1]))
 
     return neighbourPairs
-# TODO: save the pair comparison result and load it when user inputs
 
 
 def decisionMaking(tupleInput):
@@ -59,40 +60,78 @@ def decisionMaking(tupleInput):
 
     return result
 
-def analysis(input_word):
-    if not os.path.exists('./data/preprocessed.pickle'):
-        output = analysisFromScratch(input_word)
-
+def analysis(input_word, scratch=False):
+    if scratch or not os.path.exists('./data/preprocessed.pickle'):
+        languages = fromScratch(numWords=200) # if the user selects 'analysis from scratch' preprocessed pickle does not exist, start from scratch.
     else:
         languages = pickle.load(open('./data/preprocessed.pickle', 'rb'))
 
-        for lang in languages:
-            currentLanguage = languages[lang]
-            newWordList = currentLanguage.wordlist
-            newPNlist = currentLanguage.PNlist
+    results = defaultdict()  # container dict for results
 
-            newWordList[0] = input_word
+    for lang in languages:
+        currentLanguage = languages[lang]
+        currentWL = currentLanguage.wordlist
+        currentPNL = currentLanguage.PNlist
 
-            w1 = input_word
+        currentWL[0] = input_word
 
-            for i in range(len(newWordList)-1):
-                ind = i + 1
-                w2 = newWordList[ind]
-                if (len(w1) > (len(w2) - 2)) & (len(w1) < (len(w2) + 2)):
-                    ed = eval(w1, w2)
+        w1 = input_word
 
-                    if ed == 1:
-                        newPNlist.append((0, ind))
+        for i in range(len(currentWL)-1):
+            ind = i + 1
+            w2 = currentWL[ind]
+            if (len(w1) > (len(w2) - 2)) & (len(w1) < (len(w2) + 2)):
+                ed = eval(w1, w2)
 
-            currentLanguage.update(newWordList, newPNlist)
+                if ed == 1:
+                    currentPNL.append((0, ind))
 
-        print('add the network analysis part here')
+        currentLanguage.update(currentWL, currentPNL)
+
+        # Now calculate neighbourhood density (nd) and closed centrality (cc) for this language
+
+        # To do so, first we need to generate a pnn 'g'
+        vertices = list(currentWL.keys())
+        edges = currentPNL
+
+        g = Graph(vertex_attrs={'label': vertices},
+                  edges=edges,
+                  directed=False)
+
+        # get nd and cc of userinput in the graph g and assign them as variables
+        nd = (len(g.neighbors(0)))
+        cc = (g.closeness(0))
+
+        decision = decisionMaking((nd, cc))
+
+        results[lang] = [nd, cc, decision]
+
+    likelyLang = max(results, key=results.get)
+    output = 'Your input "{}" seems to belong to {}, because your input has the highest ND and CC values ' \
+             'in that language. \n\nNumber of phonologically similar words: {}\nCloseness Centrality: {}'.format(input_word,
+                                                          likelyLang,
+                                                          results[likelyLang][0],
+                                                          results[likelyLang][1])
 
     return output
 
 
-def analysisFromScratch(input_word):
-    languages = ['Dutch', 'English', 'German']
+def fromScratch(numWords = 200):
+    """
+
+    :param numWords: number of words to extract from the raw dictionary from which a pnn will be generated
+    :return: a dictionary of class Language, to be returned to pnn.analysis()
+    """
+
+    languageNames = ['Dutch', 'English', 'German']
+    languages = {name: Language(name=name) for name in languageNames}
+    for lang in languages:
+        words = importWords.decipher(lang, numWords=numWords)
+        pnlist = genPNPair(words, lang)
+        languages[lang].update(words, pnlist)
+
+
+
     nd = []
     cc = []
 
@@ -116,6 +155,4 @@ def analysisFromScratch(input_word):
     output = 'Your input "{}" seems to belong to {}, because your input has the highest ND and CC values in that language'.format(input_word,
                                                                                                                                   likelyLang)
 
-    # TODO make a function that does something like result -> make this input to human readable text -> output
-    # TODO "Your input {} seems to belong to {}, because it has {} of similar words in {} and closed centrality value is {}"
     return output

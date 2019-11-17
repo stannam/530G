@@ -77,6 +77,7 @@ def main():
 
 
 if __name__ == '__main__':
-    languages = {name: Language(name=name) for name in ['Dutch', 'English', 'German']}
+    languageNames = ['Dutch', 'English', 'German']
+    languages = {name: Language(name=name) for name in languageNames}
     main()
 
