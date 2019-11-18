@@ -107,11 +107,17 @@ def analysis(input_word, scratch=False):
         results[lang] = [nd, cc, decision]
 
     likelyLang = max(results, key=results.get)
-    output = 'Your input "{}" seems to belong to {}, because your input has the highest ND and CC values ' \
-             'in that language. \n\nNumber of phonologically similar words: {}\nCloseness Centrality: {}'.format(input_word,
-                                                          likelyLang,
-                                                          results[likelyLang][0],
-                                                          results[likelyLang][1])
+    likelyND = results[likelyLang][0]
+    likelyCC = results[likelyLang][1]
+
+    if likelyND > 0:
+        output = 'Your input "{}" seems to belong to {}, because your input has the highest ND and CC values ' \
+                 'in that language. \n\nNumber of phonologically similar words: {}\n' \
+                 'Closeness Centrality: {}'.format(input_word, likelyLang, likelyND, likelyCC)
+    else:
+        output = 'It seems that your input "{}" does not belong to neither English, Dutch, nor German. It doesn\'t' \
+                 'have any phonologically similar words in any of the three languages. ' \
+                 'Please try another word!'.format(input_word)
 
     return output
 
