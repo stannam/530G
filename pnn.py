@@ -115,8 +115,8 @@ def analysis(input_word, scratch=False):
                  'in that language. \n\nNumber of phonologically similar words: {}\n' \
                  'Closeness Centrality: {}'.format(input_word, likelyLang, likelyND, likelyCC)
     else:
-        output = 'It seems that your input "{}" does not belong to neither English, Dutch, nor German. It doesn\'t' \
-                 'have any phonologically similar words in any of the three languages. ' \
+        output = 'It seems that your input "{}" does not belong to neither English, Dutch, nor German. \nIt doesn\'t ' \
+                 'have any phonologically similar words in any of the three languages. \n\n' \
                  'Please try another word!'.format(input_word)
 
     return output

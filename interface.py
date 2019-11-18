@@ -81,7 +81,7 @@ class Ui_Dialog(object):
         self.pushButton.setText(_translate("Dialog", "Search"))
         self.pushButton_2.setText(_translate("Dialog", "Cancel"))
         self.pushButton_3.setText(_translate(
-            "Dialog", "Help: Check symbol"))
+            "Dialog", "Help: Phonetic symbols"))
 
 
 def main():
