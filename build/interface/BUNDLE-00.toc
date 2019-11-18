@@ -1,0 +1,3 @@
+([('LanguageGuessing',
+   '/Users/caojing/Desktop/libr559/530G/dist/LanguageGuessing',
+   'EXECUTABLE')],)
