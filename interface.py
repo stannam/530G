@@ -7,8 +7,12 @@
 # WARNING! All changes made in this file will be lost!
 
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 import sys
+import subprocess
+import os
+import platform
+import webbrowser
 from pnn import analysis
 import preprocessing
 from preprocessing import Language
@@ -50,8 +54,18 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         self.pushButton.clicked.connect(self.startAnalysis)
         self.pushButton_2.clicked.connect(QtWidgets.qApp.quit)
+        self.pushButton_3.clicked.connect(self.loadafile)
         self.lineEdit.returnPressed.connect(self.startAnalysis)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def loadafile(self):
+        path = os.getcwd()+"/data/Celex_DISC.pdf"
+        if platform.system() == 'Darwin':  # macOS
+            subprocess.call(('open', path))
+        elif platform.system() == 'Windows':  # Windows
+            os.startfile(path)
+        else:  # linux variants
+            subprocess.call(('xdg-open', path))
 
     def startAnalysis(self):
         userInput = self.lineEdit.text()
@@ -70,11 +84,15 @@ class Ui_Dialog(object):
             "Dialog", "Help: Check symbol"))
 
 
-if __name__ == "__main__":
-    import sys
+def main():
+
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
     ui = Ui_Dialog()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    main()
