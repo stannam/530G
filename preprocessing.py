@@ -1,7 +1,8 @@
 from importWords import decipher
 from itertools import combinations
 from editdistance import eval
-from os import path
+import os
+import sys
 import pickle
 
 
@@ -68,12 +69,18 @@ def genPNPair(words, lang):
 
 
 def main():
-    if not path.exists('./data/preprocessed.pickle'):
+    if hasattr(sys, "frozen"):
+        dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
+    else:
+        dir = os.getcwd()
+
+    preprocessedPath = os.path.join(dir, 'data', 'preprocessed.pickle')
+    if not os.path.exists(preprocessedPath):
         for lang in languages:
             words = decipher(lang)
             pnlist = genPNPair(words, lang)
             languages[lang].update(words, pnlist)
-            pickle.dump(languages, open('./data/preprocessed.pickle', 'wb'))
+            pickle.dump(languages, open(preprocessedPath, 'wb'))
 
 
 if __name__ == '__main__':

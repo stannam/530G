@@ -61,10 +61,13 @@ def decisionMaking(tupleInput):
     return result
 
 def analysis(input_word, scratch=False):
-    if scratch or not os.path.exists('./data/preprocessed.pickle'):
+
+    preprocessedPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'preprocessed.pickle')
+
+    if scratch or not os.path.exists(preprocessedPath):
         languages = fromScratch(numWords=200) # if the user selects 'analysis from scratch' preprocessed pickle does not exist, start from scratch.
     else:
-        languages = pickle.load(open('./data/preprocessed.pickle', 'rb'))
+        languages = pickle.load(open(preprocessedPath, 'rb'))
 
     results = defaultdict()  # container dict for results
 

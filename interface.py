@@ -54,12 +54,18 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         self.pushButton.clicked.connect(self.startAnalysis)
         self.pushButton_2.clicked.connect(QtWidgets.qApp.quit)
-        self.pushButton_3.clicked.connect(self.loadafile)
+        self.pushButton_3.clicked.connect(self.loadHelp)
         self.lineEdit.returnPressed.connect(self.startAnalysis)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def loadafile(self):
-        path = os.getcwd()+"/data/Celex_DISC.pdf"
+    def loadHelp(self):
+        if hasattr(sys, "frozen"):
+            bundle_dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
+            path = os.path.join(bundle_dir, 'data', 'Celex_DISC.pdf')
+
+        else:
+            path = os.path.join(os.getcwd(), 'data', 'Celex_DISC.pdf')
+
         if platform.system() == 'Darwin':  # macOS
             subprocess.call(('open', path))
         elif platform.system() == 'Windows':  # Windows
@@ -85,7 +91,6 @@ class Ui_Dialog(object):
 
 
 def main():
-
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
     ui = Ui_Dialog()

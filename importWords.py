@@ -1,5 +1,7 @@
 from collections import defaultdict
 import regex as re
+import os
+import sys
 
 
 def decipher(lang, numWords=None):
@@ -37,7 +39,14 @@ def decide_filepath(lang):
     lang = lang.lower()
     if lang in ['english', 'german', 'dutch']:
         langInitial = lang[0]
-        filepath = './data/' + langInitial + 'pl.cd'
-        return filepath
+
+        if hasattr(sys, "frozen"):
+            dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
+        else:
+            dir = os.getcwd()
+
+        destination_path = os.path.join(dir, 'data', langInitial + 'pl.cd')
+
+        return destination_path
     else:
         return
