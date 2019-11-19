@@ -46,7 +46,7 @@ class Ui_Dialog(object):
         self.pushButton_2.setStyleSheet("\n"
                                         "background-color: rgb(253, 154, 126);")
         self.pushButton_3 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_3.setGeometry(QtCore.QRect(80, 110, 140, 32))
+        self.pushButton_3.setGeometry(QtCore.QRect(80, 110, 150, 32))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_3.setStyleSheet("\n"
                                         "background-color: rgb(156, 217, 173);")
