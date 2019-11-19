@@ -7,10 +7,10 @@ block_cipher = None
 lg_path = os.getcwd()
 
 a = Analysis([os.path.join(lg_path, 'interface.py')],
-             pathex=['lg_path'],
+             pathex=[lg_path],
              binaries=[],
-             datas=[],
-             hiddenimports=['PyQt5', 'editdistance', 'regex', 'python-igraph'],
+             datas=[('data', 'data')],
+             hiddenimports=['PyQt5', 'editdistance', 'regex', 'igraph', 'igraph.vendor.texttable'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -28,6 +28,7 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
+          runtime_tmpdir=None,
           console=False)
 		  
 if sys.platform == 'darwin':
