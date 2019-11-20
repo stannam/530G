@@ -3,6 +3,7 @@ from editdistance import eval
 from igraph import Graph
 import importWords
 import os.path
+import sys
 import pickle
 from preprocessing import Language
 from collections import defaultdict
@@ -61,8 +62,11 @@ def decisionMaking(tupleInput):
     return result
 
 def analysis(input_word, scratch=False):
-
-    preprocessedPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'preprocessed.pickle')
+    if hasattr(sys, "frozen"):
+        dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
+    else:
+        dir = os.getcwd()
+    preprocessedPath = os.path.join(dir, 'data', 'preprocessed.pickle')
 
     if scratch or not os.path.exists(preprocessedPath):
         languages = fromScratch(numWords=200) # if the user selects 'analysis from scratch' preprocessed pickle does not exist, start from scratch.

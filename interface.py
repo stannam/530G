@@ -12,7 +12,6 @@ import sys
 import subprocess
 import os
 import platform
-import webbrowser
 from pnn import analysis
 import preprocessing
 from preprocessing import Language
