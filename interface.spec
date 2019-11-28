@@ -25,11 +25,11 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           name='LanguageGuessing',
-          debug=False,
+          debug=True,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=False)
+          console=True)
 		  
 if sys.platform == 'darwin':
    app = BUNDLE(exe, name='LanguageGuessing.app')

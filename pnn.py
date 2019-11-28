@@ -62,6 +62,9 @@ def decisionMaking(tupleInput):
     return result
 
 def analysis(input_word, scratch=False):
+    """
+    If there is a preprocessed file, just use it. If not, start from scratch.
+    """
     if hasattr(sys, "frozen"):
         dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
     else:

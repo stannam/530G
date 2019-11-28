@@ -58,6 +58,12 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def loadHelp(self):
+        """
+         This function prompts the table of IPA and DISC phonetic systems. The table is provided as an external pdf file,
+         so different method was used by the user OS, and different way of defining the path was used by cases where
+         the program is run (whether it is run from the codes, or as the frozen executable).
+          For this we used conditionals.
+        """
         if hasattr(sys, "frozen"):
             bundle_dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
             path = os.path.join(bundle_dir, 'data', 'Celex_DISC.pdf')
@@ -73,6 +79,12 @@ class Ui_Dialog(object):
             subprocess.call(('xdg-open', path))
 
     def startAnalysis(self):
+        """
+        This function is activated when the user clicks on the 'Search'. It starts the analysis, by connecting
+        to the 'analysis' function of pnn.py.
+        When the back-end part finishes all the operation and returns a text output, it clears the textbox and writes
+        the result on it.
+        """
         userInput = self.lineEdit.text()
         result = analysis(userInput)
         result = str(result)
